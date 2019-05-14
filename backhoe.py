@@ -99,14 +99,35 @@ def control(x, y):
     dest_theta_boom, dest_theta_stick = ikine(theta_boom, theta_stick, x, y)
 
     # move boom
-    delta_theta_boom = dest_theta_boom - theta_boom
-    print rad2deg(delta_theta_boom)
-    fire('boom', delta_theta_boom)
+    count = 4
+    while True:
+        delta_theta_boom = dest_theta_boom - theta_boom
+        print rad2deg(delta_theta_boom)
+        if abs(delta_theta_boom) < deg2rad(3):
+            break
+        print rad2deg(delta_theta_boom)
+        fire('boom', delta_theta_boom)
+        time.sleep(0.5)
+        theta_boom = get_boom_angle()
+        count -= 1
+        if count == 0:
+            break
+
 
     # move stick
-    delta_theta_stick = dest_theta_stick - theta_stick
-    print rad2deg(delta_theta_stick)
-    fire('stick', delta_theta_stick)
+    count = 4
+    while True:
+        delta_theta_stick = dest_theta_stick - theta_stick
+        if abs(delta_theta_stick) < deg2rad(3):
+            break
+        print rad2deg(delta_theta_stick)
+        fire('stick', delta_theta_stick)
+        time.sleep(0.5)
+        theta_stick = get_stick_angle()
+        count -= 1
+        if count == 0:
+            break
+
 
 def pickup():
     fire('bucket', deg2rad(-120))
@@ -128,10 +149,11 @@ if __name__ == "__main__":
     com_port = serial.Serial(COM_PATH, timeout=60)
     time.sleep(1.0)
     diagnostics()
-    control(30, 20)
-    dropoff()
-    time.sleep(1.0)
-    control(15, -1)
-    pickup()
+    control(10, 20)
+    #control(30, 20)
+    #dropoff()
+    #time.sleep(1.0)
+    #control(15, -1)
+    #pickup()
     #fire('house', deg2rad(-30))
     com_port.close()
