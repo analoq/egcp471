@@ -72,7 +72,7 @@ def fire(joint, delta_theta):
                  'pos_secrad': 1.0 / deg2rad(31.654),
                  'neg_secrad': 1.0 / deg2rad(41.607)},
         'stick': {'address': 0x02,
-                  'magnitude': 0xB0,
+                  'magnitude': 0xC0,
                   'pos_secrad': 1.0 / deg2rad(19.95),
                   'neg_secrad': 1.0 / deg2rad(22.22)},
         'bucket': {'address': 0x03,
@@ -114,13 +114,24 @@ def pickup():
 def dropoff():
     fire('bucket', deg2rad(80))
 
+def diagnostics():
+    com_port.write([0x00, 0x00, 0x00])
+    line = com_port.readline()
+    if line.strip() == 'OK':
+        print 'Diagnostic pass'
+        return True
+    else:
+        print 'Diagnostic fail'
+        return False
+
 if __name__ == "__main__":
     com_port = serial.Serial(COM_PATH, timeout=60)
     time.sleep(1.0)
-    #control(30, 20)
-    #dropoff()
-    #time.sleep(1.0)
-    #control(15, 0)
-    #pickup()
+    diagnostics()
+    control(30, 20)
+    dropoff()
+    time.sleep(1.0)
+    control(15, -1)
+    pickup()
     #fire('house', deg2rad(-30))
     com_port.close()

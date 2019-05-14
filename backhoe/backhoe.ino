@@ -83,6 +83,9 @@ void loop()
   {
     switch ( cmd[0] )
     {
+      case 0x00:
+        Serial.println("OK");
+        break;
       case 0x01:
         fire(BOOM_1, BOOM_2, cmd[1], cmd[2]);
         break;
@@ -97,11 +100,11 @@ void loop()
         break;
       case 0x11:
         event = sensor_boom();
-        Serial.println(event.acceleration.y);
+        Serial.println(event.acceleration.y, 10);
         break;
       case 0x12:
         event = sensor_stick();
-        Serial.println(event.acceleration.y);
+        Serial.println(event.acceleration.y, 10);
         break;
     }
   }
